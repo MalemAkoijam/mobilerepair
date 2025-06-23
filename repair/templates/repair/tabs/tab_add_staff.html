@@ -1,0 +1,33 @@
+<!-- Add Staff Tab -->
+{% if user.is_superuser %}
+<div class="tab-pane fade" id="tab-add-staff" role="tabpanel" aria-labelledby="tab-add-staff-tab">
+  <div class="card shadow-sm p-4 bg-light border-0">
+    <h4 class="mb-4 text-success">➕ Add New Staff Member</h4>
+
+    <form method="post" action="{% url 'add_staff' %}">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="staff_username" class="form-label">Username</label>
+        <input type="text" name="staff_username" id="staff_username" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="staff_email" class="form-label">Email</label>
+        <input type="email" name="staff_email" id="staff_email" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="staff_password" class="form-label">Password</label>
+        <input type="password" name="staff_password" id="staff_password" class="form-control" required>
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-person-plus me-1"></i> Create Staff Account
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}

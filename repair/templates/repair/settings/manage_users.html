@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="Manage Users - Admin Dashboard for Mobile Repair Service" />
+<!--  <meta name="author" content="Your Company Name" />-->
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Manage Users | Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<!--  <link href="{% static 'repair/styles.css' %}" rel="stylesheet">-->
+  <style>
+    .fade-in { animation: fadeInUp 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 1px rgba(0, 0, 0, 0.1); }
+    .table th, .table td { vertical-align: middle; }
+    .container { animation: fadeInUp 0.5s ease-in-out; }
+    body.dark-mode { background-color: #121212; color: #f5f5f5; }
+    body.dark-mode .table { color: #fff; }
+    body.dark-mode .table-dark th { background-color: #1f1f1f; }
+    .search-box { max-width: 350px; }
+  </style>
+</head>
+<body>
+
+{% include "repair/header.html" %}
+
+<div class="container-fluid py-1">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-2">
+    <h2 class="fw-bold text-primary"><i class="bi bi-people-fill me-2"></i>Manage Users</h2>
+    <div class="d-flex">
+      <div class="d-flex align-items-stretch">
+        <input type="text" id="liveSearch" class="form-control search-box" placeholder="Search users..." style="height: 40px; min-width: 200px;" />
+
+        <button class="btn btn-dark d-flex align-items-center justify-content-center" style="height: 40px;" onclick="toggleDarkMode()">
+          <i class="bi bi-moon-fill"></i>
+        </button>
+
+        <button class="btn btn-success d-flex align-items-center" style="height: 40px; width:180px;" data-bs-toggle="modal" data-bs-target="#addUserModal">
+          <i class="bi bi-person-plus-fill me-1"></i> Add User
+        </button>
+      </div>
+    </div>
+  </div>
+    {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div id="userTableContainer" class="table-responsive fade-in">
+    <table class="table table-bordered table-hover shadow-sm rounded" id="userTable">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            {% if user.is_superuser %}<span class="badge bg-danger">Admin</span>
+            {% elif user.is_staff %}<span class="badge bg-primary">Staff</span>
+            {% else %}<span class="badge bg-secondary">User</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if user.is_active %}<span class="badge bg-success">Active</span>
+            {% else %}<span class="badge bg-warning text-dark">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="d-flex flex-wrap gap-1">
+              <a href="{% url 'edit_user' user.id %}" class="btn btn-sm btn-outline-info" title="Edit">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <a href="{% url 'delete_user' user.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')" title="Delete">
+                <i class="bi bi-trash"></i>
+              </a>
+              {% if user.is_active %}
+              <a href="{% url 'deactivate_user' user.id %}" class="btn btn-sm btn-outline-warning" title="Deactivate">
+                <i class="bi bi-person-dash-fill"></i>
+              </a>
+              {% else %}
+              <a href="{% url 'activate_user' user.id %}" class="btn btn-sm btn-outline-success" title="Activate">
+                <i class="bi bi-person-check-fill"></i>
+              </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if users.has_other_pages %}
+  <nav>
+    <ul class="pagination justify-content-end">
+      {% if users.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">«</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ users.previous_page_number }}">‹</a></li>
+      {% endif %}
+
+      <li class="page-item disabled"><span class="page-link">Page {{ users.number }} of {{ users.paginator.num_pages }}</span></li>
+
+      {% if users.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ users.next_page_number }}">›</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ users.paginator.num_pages }}">»</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'add_user' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ add_user_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+
+  document.getElementById("liveSearch").addEventListener("input", function () {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#userTable tbody tr");
+    rows.forEach(row => {
+      const rowText = row.innerText.toLowerCase();
+      row.style.display = rowText.includes(filter) ? "" : "none";
+    });
+  });
+</script>
+</body>
+</html>

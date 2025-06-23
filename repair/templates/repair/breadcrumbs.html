@@ -1,0 +1,37 @@
+{% load static %}
+{% load breadcrumbs %}
+{% block content %}
+
+<!-- 🔹 Elegant Breadcrumb Section -->
+<div class="container-fluid mb-0 mt-0" style="border-top: 1px solid blue; border-bottom: 1px solid blue;">
+  <div style="background-color: transparent;">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0 mt-0 align-items-center">
+        <li class="breadcrumb-item">
+          <a href="{% url 'home' %}" class="text-decoration-none text-warning fw-semibold">
+            <i class="bi bi-house-door-fill me-1"></i>Home
+          </a>
+        </li>
+
+        {% breadcrumb as crumbs %}
+        {% for label, link in crumbs %}
+          {% if forloop.last %}
+            <li class="breadcrumb-item active text-info fw-semibold" aria-current="page">
+              <i class="bi bi-chevron-right mx-1"></i>{{ label }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<!-- Your page content here -->
+<!--<div class="container">-->
+<!--  &lt;!&ndash; example content &ndash;&gt;-->
+<!--  <h2>{{ folder.name }}</h2>-->
+  <!-- or -->
+<!--  <h2>{{ tool.name }}</h2>-->
+<!--</div>-->
+
+{% endblock %}

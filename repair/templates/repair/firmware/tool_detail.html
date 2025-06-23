@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ tool.name }} - Activation Plans</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- AOS CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+
+    .pricing-card {
+      border-radius: 20px;
+      border: 1px solid #dee2e6; /* Light gray border */
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease-in-out;
+
+    }
+
+
+    .pricing-card:hover {
+      transform: translateY(-10px);
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
+    }
+
+    .ribbon {
+      position: absolute;
+      top: 10px;
+      right: -10px;
+      background: #333;
+      color: white;
+      padding: 5px 10px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      transform: rotate(15deg);
+      border-radius: 0 5px 5px 0;
+      z-index: 1;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    .btn-warning, .btn-success, .btn-primary {
+      font-weight: 600;
+    }
+
+    .btn-warning:hover,
+    .btn-success:hover,
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    #scrollTopBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 999;
+      display: none;
+      width: 45px;
+      height: 45px;
+      font-size: 1.25rem;
+      animation: slideInBottom 0.4s ease forwards;
+    }
+
+    @keyframes slideInBottom {
+      from {
+        transform: translate(-100px, 100px);
+        opacity: 0;
+      }
+      to {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  {% include "repair/header.html" %}
+
+  <div class="flex-grow-1">
+
+    <!-- Tool Image -->
+    <div class="container-fluid p-0 bg-light" data-aos="fade-down">
+      <div class="text-center position-relative">
+        <img src="{{ tool.image.url }}" class="img-fluid w-100"
+             style="max-height: 600px; object-fit: cover; box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.2);" alt="{{ tool.name }}"
+             data-aos="zoom-in">
+      </div>
+      <div class="mx-auto mb-4" style="width: 100px; height: 4px; background: linear-gradient(to right, #007bff, #6610f2); border-radius: 4px;"></div>
+    </div>
+
+    <!-- Tool Description -->
+    <div class="container my-5" data-aos="fade-right">
+      <div class="card shadow-sm rounded-4 p-4 bg-light">
+        <div class="card-body">
+          <h4 class="card-title fw-bold mb-3">📄 Tool Description</h4>
+          <div class="px-3 text-start">
+            {% for line in tool.description.splitlines %}
+              <p class="mb-2">• {{ line }}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activation Instructions -->
+    <div class="container my-5" data-aos="fade-up">
+      <div class="bg-white rounded shadow p-4">
+        {% if tool.name == "UnlockTool" %}
+        <div class="mb-4">
+          <h3 class="text-center fw-bold mb-4">How to Activate UnlockTool?</h3>
+          <h5 class="text-muted mb-3">Quick Guide for First-Time Users</h5>
+          <ol class="list-group list-group-numbered mb-4">
+            <li class="list-group-item">
+              <strong>Register your account</strong> on
+              <a href="https://unlocktool.net" target="_blank">UnlockTool</a>.
+            </li>
+            <li class="list-group-item">Log in again to verify your account.</li>
+            <li class="list-group-item">Use the same Username and Email ID when placing your order.</li>
+            <li class="list-group-item">Complete your payment securely via checkout.</li>
+            <li class="list-group-item"><strong>Activation within 1 to 3 hours</strong> (usually 1 hour).</li>
+          </ol>
+          <div class="alert alert-info">
+            🔁 <strong>Renewing?</strong> Use your previous Username and Email ID.
+          </div>
+        </div>
+        {% endif %}
+
+        <h5 class="mt-4">💳 <strong>Payment Options</strong></h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">💸 UPI (Paytm, PhonePe, GPay via Razorpay)</li>
+          <li class="list-group-item">🌍 PayPal – Global with cards supported</li>
+          <li class="list-group-item">🔐 100% Secure Payment</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pricing Plans -->
+    <div class="container my-5">
+      <div class="text-center mb-5" data-aos="fade-up">
+        <h2 class="fw-bold display-6">
+          <i class="bi bi-stars text-warning me-2"></i>Choose the <span class="text-primary">Right Plan</span> for You…
+        </h2>
+        <p class="lead text-muted" style="max-width: 700px; margin: 0 auto;">
+          Find the perfect activation plan that fits your needs and budget. Whether you're just getting started or need full-year access, we've got you covered.
+        </p>
+      </div>
+
+      <div class="row justify-content-center g-4">
+        {% if tool.price_3_month %}
+        <div class="col-md-4" data-aos="flip-left">
+          <div class="card pricing-card position-relative text-center">
+            <div class="ribbon bg-primary">Starter</div>
+            <div class="card-body">
+              <i class="bi bi-unlock-fill fs-1 text-primary mb-3"></i>
+              <h5 class="fw-bold">{{ tool.name }} - {{ tool.plan_3_month }} Months</h5>
+              <p><span class="old-price">₹25.00</span> <span class="fs-4 fw-bold text-primary">₹{{ tool.price_3_month }}</span></p>
+              <p><i class="bi bi-key me-1"></i> Package: M3</p>
+              <p><i class="bi bi-clock me-1"></i> 3 Months License</p>
+              <p><i class="bi bi-infinity me-1"></i> Unlimited Access</p>
+              <a href="{% url 'payment_page' tool.id %}?price={{ tool.price_3_month|floatformat:0 }}&month={{ tool.plan_3_month }}" class="btn btn-primary w-100 mt-3">
+                🔓 Activate 3 Months
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if tool.price_6_month %}
+        <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
+          <div class="card pricing-card position-relative text-center">
+            <div class="ribbon bg-success">Affordable</div>
+            <div class="card-body">
+              <i class="bi bi-unlock-fill fs-1 text-success mb-3"></i>
+              <h5 class="fw-bold">{{ tool.name }} - {{ tool.plan_6_month }} Months</h5>
+              <p><span class="old-price">₹35.00</span> <span class="fs-4 fw-bold text-success">₹{{ tool.price_6_month }}</span></p>
+              <p><i class="bi bi-key me-1"></i> Package: M6</p>
+              <p><i class="bi bi-clock me-1"></i> 6 Months License</p>
+              <p><i class="bi bi-infinity me-1"></i> Unlimited Access</p>
+              <a href="{% url 'payment_page' tool.id %}?price={{ tool.price_6_month|floatformat:0 }}&month={{ tool.plan_6_month }}" class="btn btn-success w-100 mt-3">
+                🔓 Activate 6 Months
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if tool.price_12_month %}
+        <div class="col-md-4" data-aos="flip-left" data-aos-delay="200">
+          <div class="card pricing-card position-relative text-center">
+            <div class="ribbon bg-warning text-dark">Popular</div>
+            <div class="card-body">
+              <i class="bi bi-unlock-fill fs-1 text-warning mb-3"></i>
+              <h5 class="fw-bold">{{ tool.name }} - {{ tool.plan_12_month }} Months</h5>
+              <p><span class="old-price">₹55.00</span> <span class="fs-4 fw-bold text-warning">₹{{ tool.price_12_month }}</span></p>
+              <p><i class="bi bi-key me-1"></i> Package: M12</p>
+              <p><i class="bi bi-clock me-1"></i> 12 Months License</p>
+              <p><i class="bi bi-infinity me-1"></i> Unlimited Access</p>
+              <a href="{% url 'payment_page' tool.id %}?price={{ tool.price_12_month|floatformat:0 }}&month={{ tool.plan_12_month }}" class="btn btn-warning w-100 mt-3">
+                🔓 Activate 12 Months
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center mt-5">
+      <a href="{% url 'tools_activation' %}" class="btn btn-dark">
+        <i class="bi bi-arrow-left"></i> Back to All Tools
+      </a>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button id="scrollTopBtn" class="btn btn-primary rounded-circle shadow" title="Go to top">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+  </div>
+
+  {% include "repair/footer.html" %}
+
+  <!-- JS Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ duration: 800, once: true });
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+    window.addEventListener("scroll", () => {
+      if (document.documentElement.scrollTop > 200) {
+        scrollTopBtn.style.display = "block";
+      } else {
+        scrollTopBtn.style.display = "none";
+      }
+    });
+
+    scrollTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+
+</body>
+</html>

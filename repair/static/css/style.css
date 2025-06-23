@@ -1,0 +1,90 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base styles */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #900C3F ;
+    color: #333;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Dark Mode Styling */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .table {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .btn,
+body.dark-mode .form-control,
+body.dark-mode .page-link {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #444;
+}
+html, body {
+    height: 100%;
+}
+body.dark-mode .form-control::placeholder {
+    color: #bbb;
+}
+
+body.dark-mode .table-dark {
+    background-color: #333;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 13px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+}
+footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+}
+footer a:hover {
+  color: #0d6efd;
+  transition: 0.2s ease-in-out;
+}
+@keyframes scroll-right {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }

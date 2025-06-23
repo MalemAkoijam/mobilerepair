@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mobile Repair Report</title>
+    <style>
+        @page {
+            margin: 30px;
+        }
+        body {
+            font-family: "Helvetica", sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #007BFF;
+        }
+        .sub-header {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px 10px;
+            border: 1px solid #bbb;
+        }
+        th {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📱 Mobile Repair Imphal</h1>
+        <div class="sub-header">Repair Report - {{ repairs|length }} Record{{ repairs|length|pluralize }}</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Device</th>
+                <th>Issue</th>
+                <th>Technician</th>
+                <th>Status</th>
+                <th>Date Received</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in repairs %}
+            <tr>
+                <td>{{ r.customer.name }}</td>
+                <td>{{ r.device_model }}</td>
+                <td>{{ r.issue_description }}</td>
+                <td>{% if r.technician %}{{ r.technician.name }}{% else %}Not Assigned{% endif %}</td>
+                <td>{{ r.get_status_display }}</td>
+                <td>{{ r.date_received|date:"d M Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;">No records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Generated on {{ now|date:"d M Y, h:i A" }} | Mobile Repair Imphal
+    </div>
+</body>
+</html>

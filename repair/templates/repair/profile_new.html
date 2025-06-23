@@ -1,0 +1,595 @@
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mobile Repair Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <style>
+    /* General fix for small screens */
+    @media (max-width: 768px) {
+      .card, .btn, .form-control, .form-select {
+        font-size: 0.9rem;
+      }
+
+      .tab-content, .tab-pane {
+        padding: 0.5rem;
+      }
+
+      .nav-tabs .nav-link {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.5rem;
+      }
+
+      h3, h5 {
+        font-size: 1.2rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      .table th, .table td {
+        padding: 0.5rem;
+      }
+
+      .alert, .btn {
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        padding: 0.4rem 0.6rem;
+      }
+    }
+
+    /* Even smaller screen adjustments */
+    @media (max-width: 480px) {
+      .btn, .form-control, .form-select {
+        width: 100%;
+        font-size: 0.85rem;
+      }
+
+      .tab-content {
+        padding: 0.3rem;
+      }
+
+      .table th, .table td {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Horizontal scrolling for tables on small screens */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+   @keyframes scroll-right {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    /* Slide In Animation */
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Fade-in cards or tab sections */
+    .tab-pane, .card, .table {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {opacity: 0;}
+      100% {opacity: 1;}
+    }
+
+    /* Scrolling banner text animation is already defined */
+    @keyframes scroll-right {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999;
+        display: none;
+        width: 45px;
+        height: 45px;
+        font-size: 1.25rem;
+        animation: slideInBottom 0.4s ease forwards;
+      }
+
+      @keyframes slideInBottom {
+        from {
+          transform: translateY(100px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+
+  </style>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .sidebar {
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      border-right: 1px solid #dee2e6;
+    }
+    .sidebar .nav-link {
+      font-weight: 500;
+      color: #333;
+      transition: all 0.2s ease-in-out;
+    }
+    .sidebar .nav-link:hover {
+      background-color: #0d6efd;
+      color: white;
+      border-radius: 0.375rem;
+    }
+    .main-content {
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+<!-- Sticky Header -->
+<header class="sticky-top shadow-sm border-bottom bg-dark text-light" style="">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <!-- Brand -->
+      <a class="navbar-brand fw-bold fs-4 d-flex align-items-center text-white" href="{% url 'home' %}">
+        <img src="{% static 'images/logo.jpg' %}" alt="Logo" style="height: 40px;" class="me-2 rounded">
+        Mobile Repair Imphal
+      </a>
+
+      <!-- Toggler for mobile -->
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarActions"
+              aria-controls="navbarActions" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="bi bi-list fs-2" id="toggleIcon"></i></span>
+      </button>
+
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarActions">
+        <div class="d-flex align-items-center gap-3 ms-auto mt-3 mt-lg-0">
+          {% if user.is_authenticated %}
+            <div class="dropdown">
+              <button class="btn d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                      type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}" class="rounded-circle shadow-sm" width="40" height="40" alt="User Avatar">
+                <div class="ms-2 d-none d-sm-block text-start">
+                  <span class="fw-semibold d-block text-white">{{ user.username|title }}</span>
+                  <small class="text-light">(
+                    {% if user.is_superuser %}Admin
+                    {% elif user.is_staff %}Staff
+                    {% else %}Customer
+                    {% endif %}
+                  )</small>
+                </div>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                <li><a class="dropdown-item" href="{% url 'samsung_tools' %}"><i class="bi bi-clock-history me-2"></i>Order History</a></li>
+                 <!-- Right: Admin Dashboard Button (only for superuser) -->
+                  {% if user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a></li>
+                  {% endif %}
+                <li><a class="dropdown-item" href="#"><i class="bi bi-credit-card me-2"></i>Payment Methods</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+              </ul>
+            </div>
+          {% else %}
+            <a href="{% url 'login_register' %}" class="btn btn-light btn-animate">
+              <i class="bi bi-person-circle me-1"></i> Login / Register
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </nav>
+  {% include "repair/breadcrumbs.html" %}
+</header>
+<!-- Main Layout -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3">
+        <h5 class="fw-bold mb-3 text-primary">🔧 Admin Menu</h5>
+        <ul class="nav flex-column gap-2">
+          <li><a href="{% url 'profile' %}" class="nav-link"><i class="bi bi-person-circle me-2"></i> My Account</a></li>
+
+            {% if user.is_staff or user.is_superuser %}
+            <li><a href="{% url 'technician_dashboard' %}" class="nav-link"><i class="bi bi-tools me-2"></i> Technician Management</a></li>
+            <li><a href="{% url 'add_customer_account' %}" class="nav-link"><i class="bi bi-person-plus me-2"></i> Add Customer</a></li>
+            <li><a href="{% url 'add_phone_model' %}" class="nav-link"><i class="bi bi-phone me-2"></i> Add Phone Model</a></li>
+            <li><a href="{% url 'get_device_models' %}" class="nav-link"><i class="bi bi-upload me-2"></i> Samsung Bulk Upload</a></li>
+          {% endif %}
+
+
+          {% if user.is_superuser %}
+            <li><a href="{% url 'add_staff' %}" class="nav-link"><i class="bi bi-person-gear me-2"></i> Add Staff</a></li>
+          {% endif %}
+
+          <li><a href="#" class="nav-link"><i class="bi bi-people me-2"></i> Users</a></li>
+          <li><a href="{% url 'home' %}" class="nav-link"><i class="bi bi-house me-2"></i> Home</a></li>
+        </ul>
+      </nav>
+
+
+      <!-- Content Area -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+        <div class="" style="width: 100%; overflow: hidden; background-color: #0d6efd; padding: 8px 0;
+              margin-bottom:4px; position: relative;">
+                  <a href="#" style="
+                      display: inline-block;
+                      white-space: nowrap;
+                      color: white;
+                      text-decoration: none;
+                      font-weight: bold;
+                      animation: scroll-right 20s linear infinite;
+                      font-size: 1rem;">
+                    👉Keep Your Profile Up to Date — Mobile Repair Imphal Makes It Easy 👈
+                  </a>
+        </div>
+        <!-- Display Messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <!-- Default Content -->
+        <h2 class="mb-4">👋 Welcome, {{ user.username|title }}</h2>
+        <p>Select an option from the left menu to manage your dashboard.</p>
+
+        <div >
+
+
+
+
+            </div>
+          </div>
+
+
+
+        <!-- Add Staff -->
+          {% if user.is_superuser %}
+          <div class="tab-pane fade" id="tab-add-staff" role="tabpanel" aria-labelledby="tab-add-staff-tab">
+            <h3 class="mb-4 text-success">➕ Add New Staff</h3>
+            <form method="post" action="{% url 'add_staff' %}" class="card p-4 shadow-sm">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="staff_username" required class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="staff_email" required class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="staff_password" required class="form-control">
+              </div>
+              <div class="text-end">
+                <button type="submit" class="btn btn-success">Create Staff Account</button>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+
+               <div class="tab-pane fade" id="tab-samsung-upload" role="tabpanel" aria-labelledby="tab-samsung-upload-tab">
+          <div class="p-4 border rounded bg-light">
+            <h5 class="mb-3">📥 Bulk Upload Samsung Models</h5>
+              <form method="POST">
+                {% csrf_token %}
+                {{ bulk_form.non_field_errors }}
+                <div class="mb-3">
+                  <label class="form-label">Paste Bulk Model Data</label>
+                  {{ bulk_form.bulk_data|add_class:"form-control" }}
+                  <small class="form-text text-muted">Tab-separated: Model Name[TAB]Model Number[TAB]Support (Yes/No)</small>
+                </div>
+                <button type="submit" class="btn btn-success">Upload</button>
+              </form>
+
+          </div>
+
+
+                <!-- You can override this block in child templates -->
+         <!-- Add Customer -->
+        {% if user.is_staff or user.is_superuser %}
+        <div class="tab-pane fade" id="tab-add-customer" role="tabpanel" aria-labelledby="tab-add-customer-tab">
+          <h3 class="mb-4 text-success">➕ Add New Customer</h3>
+          <form method="post" action="{% url 'add_customer_account' %}" class="card p-4 shadow-sm">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" name="customer_name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" name="customer_username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" name="customer_email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" name="customer_password" class="form-control" required>
+            </div>
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">Create Account</button>
+            </div>
+          </form>
+        </div>
+        {% endif %}
+
+        <!-- Add Phone Model -->
+        {% if user.is_staff or user.is_superuser %}
+        <div class="tab-pane fade" id="tab-add-phone-model" role="tabpanel" aria-labelledby="tab-add-phone-model-tab">
+          <h3 class="mb-4 text-primary">📱 Add Phone Model</h3>
+
+          <form method="post" action="{% url 'add_phone_model' %}" class="card p-4 shadow-sm">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label">Brand Name</label>
+              <input type="text" name="brand" class="form-control" placeholder="e.g. Samsung, Apple, Redmi" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Model Name</label>
+              <input type="text" name="model_name" class="form-control" placeholder="e.g. Galaxy S21, iPhone 13 Pro" required>
+            </div>
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">Add Model</button>
+            </div>
+          </form>
+
+          <!-- Table -->
+          <div class="mt-4">
+            <h5 class="text-muted">📋 Existing Phone Models</h5>
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered mt-2">
+                <thead class="table-primary">
+                  <tr>
+                    <th>#</th>
+                    <th>Brand</th>
+                    <th>Model Name</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for model in page_obj %}
+                  <tr>
+                    <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                    <td>{{ model.brand }}</td>
+                    <td>{{ model.model_name }}</td>
+                    <td class="text-end">
+                      <form method="post" action="{% url 'delete_phone_model' model.id %}" onsubmit="return confirm('Delete this model?')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">🗑️ Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="4" class="text-center text-muted">No models added yet.</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+              <nav>
+                <ul class="pagination justify-content-end">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">« First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹ Prev</a></li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">« First</span></li>
+                    <li class="page-item disabled"><span class="page-link">‹ Prev</span></li>
+                  {% endif %}
+
+                  <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                  </li>
+
+                  {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next ›</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a></li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next ›</span></li>
+                    <li class="page-item disabled"><span class="page-link">Last »</span></li>
+                  {% endif %}
+                </ul>
+              </nav>
+            </div>
+          </div>
+          {% endif %}
+
+        <!-- Users List -->
+          <div class="tab-pane fade" id="tab-users" role="tabpanel" aria-labelledby="tab-users-tab">
+            <h3 class="mb-4 text-primary">👥 Users List</h3>
+
+            {% if user.is_superuser %}
+            <!-- Admins Table -->
+            <div class="card shadow-sm mb-4">
+              <div class="card-header bg-danger text-white fw-bold">🔐 Admins</div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover mb-0 text-left align-middle">
+                  <thead class="table-danger">
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Last Login</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                      <td>{{ admin.username }}</td>
+                      <td>{{ admin.email }}</td>
+                      <td>{{ admin.last_login|default:"Never" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="2" class="text-muted text-center">No Admins found.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Staff Table -->
+            <div class="card shadow-sm mb-4">
+              <div class="card-header bg-warning text-dark fw-bold">🛠️ Staff</div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover mb-0 text-left align-middle">
+                  <thead class="table-warning">
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Last Login</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for staff in staffs %}
+                    <tr>
+                      <td>{{ staff.username }}</td>
+                      <td>{{ staff.email }}</td>
+                      <td>{{ staff.last_login|default:"Never" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="2" class="text-muted text-center">No Staff found.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Customers Table -->
+            <div class="card shadow-sm mb-4">
+              <div class="card-header bg-info text-white fw-bold">🙋 Customers</div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover  mb-0  align-middle">
+                  <thead class="table-info text-left">
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Last Login</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-left">
+                    {% for customer in customers %}
+                    <tr>
+                      <td>{{ customer.username }}</td>
+                      <td>{{ customer.email }}</td>
+                      <td>{{ customer.last_login|default:"Never" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="3" class="text-muted text-center">No Customers found.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            </div>
+      </main>
+    </div>
+    <!-- 🔝 Scroll to Top Button (Left Side Fixed) -->
+    <button id="scrollTopBtn" class="btn btn-primary rounded-circle shadow" title="Go to top">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+  </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div style="margin-bottom: 2rem;">
+  {% include 'repair/check_page.html' %}
+</div>
+   {% include "repair/footer.html" %}
+
+
+<!--jascript-->
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+<!-- AOS Animation Library -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+<script>
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+  window.addEventListener("scroll", () => {
+    if (document.documentElement.scrollTop > 200) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
+
+</body>
+</html>
+
+
+

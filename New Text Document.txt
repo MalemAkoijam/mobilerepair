@@ -1,0 +1,48 @@
+✅ Option 1: Free Hosting with PythonAnywhere (Easy for Beginners)
+🔹 Step-by-Step:
+Create an account:
+Go to https://www.pythonanywhere.com and sign up (Free plan is fine for small apps).
+
+Upload your project:
+
+Go to the Files tab.
+
+Upload your Django project files (zip, or use GitHub clone).
+
+Set up a virtualenv:
+
+Go to Consoles > start a Bash console.
+
+Run:
+
+bash
+Copy
+Edit
+mkvirtualenv myenv --python=python3.10
+pip install -r requirements.txt
+Create a web app:
+
+Go to the Web tab.
+
+Click Add a new web app > Manual config > choose Python version.
+
+Set the WSGI file path to your project’s wsgi.py.
+
+Update Static files and Code directory.
+
+Configure settings:
+
+Set ALLOWED_HOSTS = ['yourusername.pythonanywhere.com'] in settings.py
+
+Set DEBUG = False for production.
+
+Set static and media root correctly.
+
+Collect static files:
+
+bash
+Copy
+Edit
+python manage.py collectstatic
+Reload the web app from the PythonAnywhere web dashboard.
+

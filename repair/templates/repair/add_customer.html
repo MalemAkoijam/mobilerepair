@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Customer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f5f7fa;
+    }
+
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+      animation: slideInBounce 1s ease-out;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    @keyframes slideInBounce {
+      0% {
+        opacity: 0;
+        transform: translateY(-200px);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(30px);
+      }
+      80% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    /* Decorative animated ball */
+    .pulse-ball {
+      width: 12px;
+      height: 12px;
+      background-color: #0d6efd;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.6);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+    }
+
+    .heading-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  {% include "repair/header_1.html" %}
+
+  <div class="container flex-grow-1">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card p-4">
+
+            <!-- Animated heading with ball -->
+            <div class="heading-wrapper">
+              <div class="pulse-ball"></div>
+              <h3 class="text-center fw-bold mb-0">➕ Add New Customer</h3>
+            </div>
+
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <form method="post" novalidate>
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="name" class="form-control" required placeholder="Enter full name">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone Number *</label>
+                <input type="text" name="phone" class="form-control" required placeholder="e.g. 9876543210">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea name="address" class="form-control" rows="3" placeholder="Optional address"></textarea>
+              </div>
+
+              <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                <button type="submit" class="btn btn-primary px-4">💾 Save Customer</button>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">← Back to Home</a>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "repair/footer.html" %}
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

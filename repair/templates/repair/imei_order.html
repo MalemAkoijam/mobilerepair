@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Place IMEI Order</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(to right, #eef2f3, #ffffff);
+      color: #333;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2 {
+      font-weight: bold;
+      color: #2f81f7;
+    }
+
+    .container-box {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+      height: 100%;
+    }
+
+    #serviceList {
+      max-height: 350px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    #serviceList::-webkit-scrollbar {
+      width: 6px;
+    }
+    #serviceList::-webkit-scrollbar-thumb {
+      background-color: #2f81f7;
+      border-radius: 5px;
+    }
+
+    .service-item {
+      background-color: #f9f9f9;
+      border: 1px solid #dee2e6;
+      padding: 0.75rem;
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .service-item:hover,
+    .service-item.active {
+      background-color: #2f81f7;
+      color: #fff;
+      border-color: #2f81f7;
+      box-shadow: 0 4px 12px rgba(47, 129, 247, 0.3);
+    }
+
+    .form-control,
+    .form-select {
+      background-color: #fdfdfd;
+      border: 1px solid #ced4da;
+      color: #333;
+      border-radius: 8px;
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #2f81f7;
+      box-shadow: 0 0 0 0.15rem rgba(47, 129, 247, 0.25);
+    }
+
+    .price-display {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2f81f7;
+    }
+
+    .btn-order {
+      background: linear-gradient(to right, #2f81f7, #1f6feb);
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-order:hover {
+      background: linear-gradient(to right, #1f6feb, #2f81f7);
+      transform: scale(1.02);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+      border-radius: 8px;
+    }
+
+  </style>
+</head>
+<body>
+
+    {% include "repair/header.html" %}
+<div class="container py-4">
+  <h2 class=" mb-4">📱 Place a New IMEI Order</h2>
+  <div class="row g-4">
+    <!-- Left Panel -->
+    <div class="col-md-4">
+      <div class="container-box">
+        <div class="input-group mb-3">
+          <select class="form-select" id="groupSelect" onchange="filterServices()">
+            <option value="All">All Group</option>
+            {% for group in groups %}
+              <option value="{{ group }}">{{ group }}</option>
+            {% endfor %}
+          </select>
+          <input type="text" class="form-control" placeholder="Search Service..." id="searchInput" onkeyup="filterServices()">
+        </div>
+
+       <div id="serviceList">
+        {% for service in services %}
+          <div class="service-item"
+               data-name="{{ service.name|lower }}"
+               data-group="{{ service.group }}"
+               data-ios="{{ service.ios_supported }}"
+               data-price="{{ service.price }}"
+               onclick="selectService(this)">
+            {{ service.name }}<br>
+            <small class="text-muted">{{ service.ios_supported }}</small><br>
+            <span class="text-warning">₹{{ service.price }}</span>
+          </div>
+        {% endfor %}
+      </div>
+
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="col-md-8">
+      <form method="POST" action="{% url 'payment_model' %}" class="container-box h-100 d-flex flex-column justify-content-between">
+        {% csrf_token %}
+        <div>
+          <h5 id="selectedService" class="fw-bold text-info mb-3">Select a service from the left panel</h5>
+
+          <!-- Service Info (hidden fields) -->
+          <input type="hidden" name="service_id" id="serviceIdInput">
+          <input type="hidden" name="service_name" id="serviceNameInput">
+          <input type="hidden" name="service_price" id="servicePriceInput">
+
+
+          <label class="form-label">Serial Number:</label>
+          <textarea name="serial_numbers" class="form-control mb-3" rows="4" placeholder="Enter serial number(s)..." required></textarea>
+
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="price-display">₹<span id="priceValue">0.00</span></div>
+            <div class="form-check form-switch checkbox-label">
+              <input class="form-check-input" type="checkbox" name="frequent_use" id="frequentUse">
+              <label class="form-check-label" for="frequentUse">Want to use frequently</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-order">Place Order</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+    <!-- AOS JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelector('.btn-order').addEventListener('click', function (e) {
+    const serviceName = document.getElementById('serviceNameInput').value;
+    const servicePrice = document.getElementById('servicePriceInput').value;
+
+    if (!serviceName || !servicePrice || isNaN(servicePrice)) {
+      alert("Please select a valid service.");
+      e.preventDefault(); // prevent form submission
+    }
+  });
+
+  function selectService(el) {
+    document.querySelectorAll('.service-item').forEach(item => item.classList.remove('active'));
+    el.classList.add('active');
+
+    const name = el.getAttribute('data-name');
+    const ios = el.getAttribute('data-ios');
+    const price = el.getAttribute('data-price');
+
+    document.getElementById('selectedService').innerText = `${name} - ${ios}`;
+    document.getElementById('priceValue').innerText = parseFloat(price).toFixed(2);
+
+    // 🟢 Fill hidden fields for backend submission
+    document.getElementById('serviceNameInput').value = name;
+    document.getElementById('servicePriceInput').value = price;
+  }
+</script>
+
+    {% include "repair/footer.html" %}
+</body>
+</html>

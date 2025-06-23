@@ -1,0 +1,842 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="your-verification-code" />
+    <title>Mobile Repair Imphal</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Add to <head> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Add before </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'repair/styles.css' %}">
+<!-- Animation style -->
+        <style>
+          @keyframes scroll-right {
+            0% {
+              transform: translateX(-100%);
+            }
+            100% {
+              transform: translateX(100%);
+            }
+          }
+          .card {
+            transition: transform 0.2s ease;
+          }
+          .card:hover {
+            transform: translateY(-5px);
+            border: 1px solid blue;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          }
+           .modal-xl-custom {
+            max-width: 900px; /* or 1200px */
+          }
+          .modal-fullwidth {
+            max-width: 98% !important;  /* nearly full width */
+            width: 98%;
+          }
+
+          .social-btn a {
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            width: 45px;
+            transition: width 0.3s ease;
+            white-space: nowrap;
+            border-radius: 25px;
+            padding: 0.375rem 0.75rem;
+          }
+
+          .social-btn a span {
+            opacity: 0;
+            margin-left: 10px;
+            transition: opacity 0.3s ease, margin-left 0.3s ease;
+            color: inherit;
+            font-size: 0.85rem;
+          }
+
+          .social-btn a:hover {
+            width: 140px;
+          }
+
+          .social-btn a:hover span {
+            opacity: 1;
+            margin-left: 12px;
+          }
+          h1 .text-primary {
+            font-size: 2.5rem; /* desktop size */
+          }
+
+          @media (max-width: 576px) {
+            h1 .text-primary {
+              font-size: 1.6rem; /* smaller on mobile */
+            }
+
+            h1.fw-bold {
+              font-size: 1.75rem; /* reduce full heading size on small screen */
+            }
+
+            .lead {
+              font-size: 0.95rem;
+            }
+          }
+            <style>
+  .text-gradient {
+    background: linear-gradient(90deg, #007bff, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.5rem;
+    display: inline-block;
+  }
+
+  @media (max-width: 576px) {
+    .text-gradient {
+      font-size: 1.6rem;
+    }
+    h1.fw-bold {
+      font-size: 1.8rem;
+    }
+    .lead {
+      font-size: 1rem;
+    }
+  }
+
+  .btn-glow {
+    background-color: #17a2b8;
+    color: white;
+    border-radius: 30px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 15px #17a2b8;
+    transform: translateY(-2px);
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  .feature-card {
+    background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
+    border: 1px solid #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+  }
+
+  .feature-card i {
+    transition: color 0.3s ease;
+  }
+
+  .feature-card:hover i {
+    color: #0ff !important;
+  }
+
+  .card-title {
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-text {
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+
+  @media (max-width: 768px) {
+    .card-text {
+      font-size: 0.9rem;
+    }
+
+    .display-5 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+
+
+</head>
+<body class="d-flex flex-column min-vh-100">
+   {% include "repair/header.html" %}
+    <div class="container-fluid flex-grow-1 animate-slide-in">
+
+        <!-- Scrolling container -->
+        <div style="width: 100%; overflow: hidden; background-color: #0d6efd; padding: 8px 0; position: relative; ">
+          <a href="#" style="
+              display: inline-block;
+              white-space: nowrap;
+              color: white;
+              text-decoration: none;
+              font-weight: bold;
+              animation: scroll-right 20s linear infinite;
+              font-size: 1rem;">
+            👉 Welcome to Mobile Repair Imphal — Track, Manage, and Report Repairs Easily! 👈
+          </a>
+        </div>
+
+        <div class="swiper mySwiper mt-1">
+          <div class="swiper-wrapper">
+            {% for img in image %}
+              <div class="swiper-slide" style="width: 100%;">
+                <a href="https://wa.me/918798652418" target="_blank" title="Chat with us on WhatsApp">
+                  <img src="{{ img.image.url }}" alt="{{ img.title }}"
+                       style="width: 100%; height: auto; max-height: 450px; object-fit: cover; border-radius: 2px; box-shadow: 0 4px 1px rgba(0,0,0,0.2);">
+                </a>
+              </div>
+            {% empty %}
+              <div class="text-center">No images available.</div>
+            {% endfor %}
+          </div>
+
+          <!-- ✅ Pagination dots -->
+          <div class="swiper-pagination mt-2"></div>
+        </div>
+
+
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <div style="
+          position: fixed;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
+          width: auto;
+          z-index: 1030;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          padding: 10px;
+        ">
+
+          <!-- 🔗 Social Button with Slide-Out Label -->
+          <div class="social-btn">
+            <a href="https://www.youtube.com/@mobilerepairimphal7077" target="_blank" class="btn btn-outline-danger btn-sm icon-btn">
+              <i class="bi bi-youtube"></i>
+              <span>YouTube</span>
+            </a>
+          </div>
+
+          <div class="social-btn">
+            <a href="https://www.facebook.com/r3sd753fuj/" target="_blank" class="btn btn-outline-primary btn-sm icon-btn">
+              <i class="bi bi-facebook"></i>
+              <span>Facebook</span>
+            </a>
+          </div>
+
+          <div class="social-btn">
+            <a href="https://chat.whatsapp.com/C15wezEhfFt0GzabYUzuks" target="_blank" class="btn btn-outline-success btn-sm icon-btn">
+              <i class="bi bi-whatsapp"></i>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+
+          <div class="social-btn">
+            <a href="https://instagram.com/malem_akoijam1" target="_blank" class="btn btn-outline-danger btn-sm icon-btn">
+              <i class="bi bi-instagram"></i>
+              <span>Instagram</span>
+            </a>
+          </div>
+
+          <div class="social-btn">
+            <a href="https://www.facebook.com/groups/964060277785800" target="_blank" class="btn btn-outline-info btn-sm icon-btn">
+              <i class="bi bi-people-fill"></i>
+              <span>FB Group</span>
+            </a>
+          </div>
+        </div>
+        <section class="py-5 bg-light text-dark">
+          <div class="container">
+            <div class="row align-items-center g-5 flex-column-reverse flex-lg-row">
+
+              <!-- Left Text Column -->
+              <div class="col-lg-6 text-center text-lg-start" data-aos="fade-right">
+                <h1 class="fw-bold">
+                  🔧 Welcome to <span id="typewriter-text" class="text-primary d-inline-block"></span>
+                </h1>
+                <p class="lead mt-3">
+                  Fast, reliable, and affordable repair services for all smartphone brands.
+                  Track requests, assign technicians, and manage customer history all in one place.
+                </p>
+                <div class="mt-4">
+                  <a href="{% url 'check_imei_info' %}" class="btn btn-info btn-lg me-2 mb-2 mb-lg-0">
+                    <i class="bi bi-search"></i> Check IMEI Info
+                  </a>
+                  <a href="{% url 'view_repairs' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-wrench-adjustable-circle"></i> View Repairs
+                  </a>
+                </div>
+              </div>
+
+              <!-- Right Image -->
+              <div class="col-lg-6 text-center" data-aos="fade-left">
+                <img src="/media/logo/banner.png" alt="Logo" class="img-fluid" style="max-height: 300px;">
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+
+            <div class="container-fluid py-4">
+              <h4 class="mb-4 text-left">📁 File Related</h4>
+              <div class="row justify-content-center">
+                {% with folders|dictsort:"slug" as sorted_folders %}
+                  {% if sorted_folders|length > 0 %}
+                    {% for folder in sorted_folders %}
+                      {% if folder.slug %}
+                        <div class="col-10 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center"
+                             data-aos="fade-right" data-aos-delay="{{ forloop.counter0|add:"1"|add:"0" }}00">
+                          <a href="{% url 'folder_detail' folder.slug %}" class="text-decoration-none text-dark w-100">
+                            <div class="card text-center h-100 shadow-sm">
+                              <div class="pt-4">
+                                <i class="bi bi-folder-fill text-warning" style="font-size: 4rem;"></i>
+                              </div>
+                              <div class="card-body">
+                                <h6 class="card-title text-truncate">{{ folder.name }}</h6>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    <div class="col-12 text-center">
+                      <p class="text-muted">No folders found.</p>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+              </div>
+            </div>
+
+        <div class="container-fluid">
+          <h3 class="mb-4 fw-bold">
+              <i class="bi bi-phone me-2 text-primary"></i>
+              IMEI Services, IMEI Services & Tools Activation
+            </h3>
+
+          <div class="row g-4">
+            <!-- Card 1: Samsung FRP IMEI -->
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="card shadow-sm border-1 rounded-2 h-100">
+                <img src="/media/images/Samsung-Frp-Via-IMEI.jpeg" class="card-img-top rounded-top-2" alt="Samsung FRP" style="object-fit: cover; height: 180px;">
+                <div class="card-body text-center">
+                  <h6 class="card-title mb-2 fw-semibold">
+                    <i class="bi bi-phone"></i> Samsung FRP IMEI
+                  </h6>
+                  <a class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#samsungModal">
+                    Open Tool
+                  </a>
+                </div>
+              </div>
+            </div>
+              <!-- Card 2: Samsung FRP IMEI Support list -->
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="card shadow-sm border-1 rounded-2 h-100">
+                <img src="/media/images/Samsung-Frp-Via-IMEI.jpeg" class="card-img-top rounded-top-2" alt="Samsung FRP" style="object-fit: cover; height: 180px;">
+
+                <div class="card-body text-center">
+                  <h6 class="card-title mb-2 fw-semibold">
+                    <i class="bi bi-phone"></i> Samsung FRP IMEI
+                  </h6>
+                  <a href="{% url 'samsung_frp_support_list' %}" class="btn btn-outline-secondary btn-sm w-100">
+                    🔎 Check Supported Devices
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Tools Activation -->
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="card shadow-sm border-1 rounded-2 h-100">
+                <img src="/media/images/Samsung-Frp-Via-IMEI.jpeg" class="card-img-top rounded-top-2" alt="Tools Activation" style="object-fit: cover; height: 180px;">
+
+                <div class="card-body text-center">
+                  <h6 class="card-title mb-2 fw-semibold">
+                    <i class="bi bi-phone"></i> Tools Activation
+                  </h6>
+                  <a href="{% url 'tools_activation' %}" class="btn btn-outline-secondary btn-sm w-100">
+                    Tools Activation
+                  </a>
+                </div>
+              </div>
+            </div>
+
+             <!-- 🔐 Card 4: iCloud Serial Register Order -->
+            <div class="col-md-3 col-sm-6 mb-4">
+              <div class="card shadow-sm border-1 rounded-2 h-100">
+                <img src="/media/images/Samsung-Frp-Via-IMEI.jpeg"
+                     class="card-img-top rounded-top-2"
+                     alt="iPhone Tools Activation"
+                     style="object-fit: cover; height: 180px; width: 100%;" />
+
+                <div class="card-body text-center">
+                  <h6 class="card-title fw-semibold mb-2">
+                    <i class="bi bi-phone"></i> iPhone 4 to X, XR to 16 Pro Max
+                  </h6>
+                  <a href="{% url 'imei_order_view' %}" class="btn btn-outline-secondary btn-sm w-100">
+                    📦 Order Now
+                  </a>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="container-fluid py-5">
+          <!-- Red button with white text and icon -->
+          <div class="text-left mb-4">
+            <button class="btn btn-danger text-white btn-animate">
+              <i class="bi bi-film"></i> Subscribe
+            </button>
+          </div>
+
+          <!-- Video Grid -->
+          <div class="row g-4">
+            {% for video in videos %}
+              <div class="col-12 col-sm-6 col-md-3" data-aos="fade-left">
+                <div class="card shadow-sm border-0">
+                  <iframe class="w-100 rounded" height="200" src="{{ video }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
+    </div>
+   </div>
+   <section class="py-5 bg-light text-light">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <h2 class="display-6 fw-bold text-info">⚙️ What We Offer</h2>
+      <p class="text-light-emphasis">Reliable, fast, and advanced tools for mobile repair technicians.</p>
+    </div>
+
+    <!-- Features Row -->
+    <div class="row g-4">
+
+      <!-- Android Flashing -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center bg-gradient shadow-sm feature-card">
+          <div class="card-body">
+            <div class="display-5 text-success mb-3">
+              <i class="bi bi-phone-flip"></i>
+            </div>
+            <h5 class="card-title">Android Flashing</h5>
+            <p class="card-text">Flash stock ROMs, custom firmware, and unlock bootloaders with ease.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dead Boot Repair -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center bg-gradient shadow-sm feature-card">
+          <div class="card-body">
+            <div class="display-5 text-danger mb-3">
+              <i class="bi bi-cpu-fill"></i>
+            </div>
+            <h5 class="card-title">Dead Boot Repair</h5>
+            <p class="card-text">Revive bricked devices using tested DA/boot files and emergency recovery tools.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMEI Checker -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center bg-gradient shadow-sm feature-card">
+          <div class="card-body">
+            <div class="display-5 text-warning mb-3">
+              <i class="bi bi-search"></i>
+            </div>
+            <h5 class="card-title">IMEI Check</h5>
+            <p class="card-text">Get fast, token-based IMEI status reports with detailed info and history.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Repair Manager -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 text-center bg-gradient shadow-sm feature-card">
+          <div class="card-body">
+            <div class="display-5 text-primary mb-3">
+              <i class="bi bi-tools"></i>
+            </div>
+            <h5 class="card-title">Repair Manager</h5>
+            <p class="card-text">Track repair jobs, assign technicians, manage customers and invoices easily.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+   </div>
+   <!-- 🔝 Scroll to Top Button (Left Side Fixed) -->
+<button id="scrollTopBtn" class="btn btn-primary rounded-circle shadow" title="Go to top">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+ <!-- Modal -->
+<div class="modal fade" id="samsungModal" tabindex="-1" aria-labelledby="samsungModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-lg border-0">
+      <div class="modal-header bg-primary text-white py-3 px-4">
+        <h5 class="modal-title fw-bold" id="samsungModalLabel">📱 Samsung FRP by IMEI Request only supported Device!!</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- ✅ Single Form -->
+      <form method="POST" action="{% url 'samsung_tools' %}">
+        {% csrf_token %}
+        <div class="modal-body px-4 pt-4 pb-2">
+          <div class="row g-4 align-items-start">
+
+            <!-- Left Note -->
+            <div class="col-md-4">
+              <div class="bg-light p-3 rounded">
+                <small class="text-muted d-block fs-6">
+                  🔒 IMEI FRP Bypass & Info Extraction<br><br>
+                  📡 Reads Samsung device info using the <strong>SamFW Tool</strong>.<br>
+                  📋 After reading, copy and paste the extracted info here into the form for diagnostics or repair tracking.<br><br>
+                  🔗 <a href="https://samfw.com/blog/samfw-frp-tool-1-0-remove-samsung-frp-one-click" target="_blank" class="text-decoration-none">
+                    Learn more about SamFW Tool →
+                  </a>
+                </small>
+              </div>
+            </div>
+
+            <!-- Right Inputs -->
+            <div class="col-md-8">
+              <!-- Samsung Info Input -->
+              <div class="mb-3">
+                <label for="modelInput" class="form-label fw-semibold">Samsung Device Info</label>
+                <textarea class="form-control rounded-3 shadow-sm"
+                          name="model"
+                          id="modelInput"
+                          placeholder="Paste full Samsung device info output from SamFW Tool (e.g., Model, Build, Android Version, etc.)"
+                          rows="6"
+                          required></textarea>
+              </div>
+
+              <!-- IMEI Input -->
+              <div class="mb-3">
+                <label for="imeiInput" class="form-label fw-semibold">IMEI Number</label>
+                <input type="text"
+                       name="imei"
+                       class="form-control rounded-3 shadow-sm"
+                       id="imeiInput"
+                       placeholder="Enter valid IMEI (e.g., 356982112345678)"
+                       minlength="14"
+                       maxlength="17"
+                       pattern="\d+"
+                       required>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="modal-footer px-4 pb-4 pt-2">
+          <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-semibold">
+            🔍 Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+    {% if show_modal %}
+    <!-- Welcome Modal -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header">
+            <h5 class="modal-title" id="welcomeLabel">Welcome</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <h4>📱 Mobile Repair Imphal</h4>
+            <p>Glad to have you here!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      new bootstrap.Modal(document.getElementById('welcomeModal')).show();
+    </script>
+    {% endif %}
+
+    <!-- AOS JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init();</script>
+
+  <script>
+    document.getElementById("imeiForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const imei = document.getElementById("imeiInput").value.trim();
+      const model = imei ? "Galaxy S23 Ultra" : "N/A";  // Simulated logic
+      document.getElementById("modelResult").textContent = model;
+      document.getElementById("modelInfo").classList.remove("d-none");
+    });
+  </script>
+    <script>
+
+          function sliceImageFromJSON() {
+            const container = document.getElementById('sliced-container');
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('columns').value);
+            const imageUrl = imageData.image_url;
+
+            container.innerHTML = '';
+            container.style.gridTemplateColumns = `repeat(${cols}, 100px)`;
+
+            for (let r = 0; r < rows; r++) {
+              for (let c = 0; c < cols; c++) {
+                const div = document.createElement('div');
+                div.className = 'sliced-piece';
+                div.style.backgroundImage = `url(${imageUrl})`;
+                div.style.backgroundPosition = `${-c * 100}px ${-r * 100}px`;
+                container.appendChild(div);
+              }
+            }
+          }
+
+         AOS.init({
+            duration: 800,
+            once: true, // only animate once
+          });
+
+    </script>
+
+        <!-- Scrolling Animation CSS -->
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999;
+        display: none;
+        width: 45px;
+        height: 45px;
+        font-size: 1.25rem;
+        animation: slideInBottom 0.4s ease forwards;
+      }
+
+      @keyframes slideInBottom {
+        from {
+          transform: translateY(100px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+    .swiper-pagination-bullet {
+      background: #000;
+      opacity: 0.5;
+    }
+
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+      background: #007bff;
+    }
+
+      .btn-animate {
+        transition: all 0.3s ease;
+      }
+
+      .btn-animate:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      iframe {
+        border-radius: 10px;
+      }
+  @keyframes scrollRight {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+
+  .video-embed {
+      width: 100%;
+      height: 200px;
+    }
+    .pagination {
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 1rem;
+    }
+
+    .pagination .page-item .page-link {
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        margin: 0 4px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    .pagination .page-item.active .page-link {
+        z-index: 1;
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .pagination .page-item .page-link:hover {
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    @keyframes slideInFromLeft {
+      0% {
+        transform: translateX(-100vw);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-slide-in {
+      animation: slideInFromLeft 0.8s ease-out forwards;
+    }
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+</style>
+    {% include "repair/footer_1.html" %}
+    {% include "repair/footer.html" %}
+<!-- AOS Animation Library -->
+   <script>
+  const swiper = new Swiper(".mySwiper", {
+    slidesPerView: 1,
+    spaceBetween: 0,
+    loop: true,
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+  });
+
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+  window.addEventListener("scroll", () => {
+    if (document.documentElement.scrollTop > 200) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const text = "Mobile Repair Hub";
+    const element = document.getElementById("typewriter-text");
+    let i = 0;
+    let isDeleting = false;
+
+    function type() {
+      if (isDeleting) {
+        element.textContent = text.substring(0, i--);
+      } else {
+        element.textContent = text.substring(0, i++);
+      }
+
+      if (!isDeleting && i > text.length) {
+        setTimeout(() => { isDeleting = true; type(); }, 1000);
+        return;
+      }
+
+      if (isDeleting && i === 0) {
+        isDeleting = false;
+      }
+
+      setTimeout(type, isDeleting ? 60 : 100);
+    }
+
+    type();
+  });
+</script>
+
+
+
+</body>
+</html>

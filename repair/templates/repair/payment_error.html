@@ -1,0 +1,12 @@
+
+
+{% block content %}
+  <div class="container py-5">
+    <div class="alert alert-danger">
+      <h4 class="alert-heading">Payment Failed</h4>
+      <p>{{ error }}</p>
+      <hr>
+      <a href="{% url 'imei_order_view' %}" class="btn btn-primary">🔙 Back to Order Page</a>
+    </div>
+  </div>
+{% endblock %}

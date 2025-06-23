@@ -1,0 +1,275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redmi ENG Firmware</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f5f7fa;
+    }
+
+    .card-img-top {
+      height: 140px;
+      object-fit: contain;
+      padding: 10px;
+      background-color: #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-img-top {
+      transform: scale(1.05);
+    }
+
+    .btn-glow {
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-glow:hover {
+      box-shadow: 0 0 15px rgba(13, 110, 253, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 10px;
+      opacity: 0;
+    }
+
+    /* Rotate animation on load */
+    @keyframes rotateIn {
+      0% {
+        transform: rotateY(90deg) scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: rotateY(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Scroll Slice Animation */
+    @keyframes sliceIn {
+      0% {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .slice-animate {
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+    }
+
+    .slice-visible {
+      animation: sliceIn 0.7s ease-out forwards;
+    }
+
+    /* Responsive card title/font/image */
+    .card-title {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 575.98px) {
+      .card-title { font-size: 0.95rem; }
+      .card-img-top { height: 120px; }
+    }
+
+    @media (min-width: 576px) and (max-width: 767.98px) {
+      .card-title { font-size: 1rem; }
+      .card-img-top { height: 130px; }
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .card-title { font-size: 1.1rem; }
+      .card-img-top { height: 140px; }
+    }
+
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+      .card-title { font-size: 1.15rem; }
+      .card-img-top { height: 150px; }
+    }
+
+    @media (min-width: 1200px) {
+      .card-title { font-size: 1.2rem; }
+      .card-img-top { height: 160px; }
+    }
+
+    @keyframes scroll-right {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    @keyframes scroll-right {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  {% include "repair/header.html" %}
+    <div class="flex-grow-1 animate-slide-in d-flex flex-column min-vh-100 mt-2">
+
+    <!-- 🔁 Scrolling Banner -->
+    <div style="width: 100%; overflow: hidden; background-color: #0d6efd; padding: 8px 0; position: relative;">
+      <a href="#" style="
+          display: inline-block;
+          white-space: nowrap;
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          animation: scroll-right 20s linear infinite;
+          font-size: 1rem;">
+        👉 Download & Organize Redmi ENG Firmware with Ease — Only at Mobile Repair Imphal! 👈
+      </a>
+    </div>
+
+    <div class="container-fluid py-4">
+      {% if firmwares %}
+        <!-- ✅ Firmware Cards -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {% for firmware in firmwares %}
+            <div class="col">
+              <div class="card h-100 shadow-sm border-0 slice-animate">
+                <img src="{{ firmware.image }}" class="card-img-top" alt="{{ firmware.name }}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                  <h6 class="card-title fw-semibold text-center">{{ firmware.name }}</h6>
+                  <a href="{% url 'firmware_info' firmware.id %}" class="btn btn-sm btn-primary mt-2 btn-glow w-100">
+                    📄 View Info
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <!-- ❌ No Data Found -->
+        <div class="text-center my-5 animate__animated animate__fadeIn">
+          <i class="bi bi-folder-x text-danger" style="font-size: 3rem;"></i>
+          <h4 class="mt-3">No Firmware Found</h4>
+          <p class="text-muted">Sorry, there is no firmware available at the moment. Please check back later.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <nav>
+      <ul class="pagination">
+        {% if firmwares.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ firmwares.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+          </li>
+        {% endif %}
+
+        {% for num in firmwares.paginator.page_range %}
+          {% if firmwares.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+          {% elif num > firmwares.number|add:'-3' and num < firmwares.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if firmwares.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ firmwares.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+
+  {% include "repair/footer.html" %}
+  <!-- 🔝 Scroll to Top Button (Left Side Fixed) -->
+<button id="scrollTopBtn" class="btn btn-primary rounded-circle shadow" title="Go to top">
+  <i class="bi bi-arrow-up"></i>
+</button>
+    <!-- AOS JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+  #scrollTopBtn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px; /* 👈 Moved to left */
+    z-index: 999;
+    display: none;
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+    animation: slideInBottomLeft 0.4s ease forwards;
+  }
+
+  @keyframes slideInBottomLeft {
+    from {
+      transform: translate(-100px, 100px);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+  window.addEventListener("scroll", () => {
+    if (document.documentElement.scrollTop > 200) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
+
+
+  <!-- Scroll-trigger animation -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("slice-visible");
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.2
+      });
+
+      document.querySelectorAll('.slice-animate').forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!-- Add Customer -->
+{% if user.is_staff or user.is_superuser %}
+<div class="tab-pane fade" id="tab-add-customer" role="tabpanel" aria-labelledby="tab-add-customer-tab">
+  <h3 class="mb-4 text-success">➕ Add New Customer</h3>
+  <form method="post" action="{% url 'add_customer_account' %}" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="customer_name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input type="text" name="customer_username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="customer_email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" name="customer_password" class="form-control" required>
+    </div>
+    <div class="text-end">
+      <button type="submit" class="btn btn-primary">Create Account</button>
+    </div>
+  </form>
+</div>
+{% endif %}

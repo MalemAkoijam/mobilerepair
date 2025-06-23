@@ -1,0 +1,93 @@
+<!-- Users List -->
+<div class="tab-pane fade" id="tab-users" role="tabpanel" aria-labelledby="tab-users-tab">
+  <h3 class="mb-4 text-primary">👥 Users List</h3>
+
+  {% if user.is_superuser %}
+  <!-- Admins Table -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-danger text-white fw-bold">🔐 Admins</div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+        <thead class="table-danger">
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Last Login</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for admin in admins %}
+          <tr>
+            <td>{{ admin.username }}</td>
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.last_login|default:"Never" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-muted text-center">No Admins found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Staff Table -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-warning text-dark fw-bold">🛠️ Staff</div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+        <thead class="table-warning">
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Last Login</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for staff in staffs %}
+          <tr>
+            <td>{{ staff.username }}</td>
+            <td>{{ staff.email }}</td>
+            <td>{{ staff.last_login|default:"Never" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-muted text-center">No Staff found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Customers Table -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white fw-bold">🙋 Customers</div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+        <thead class="table-info">
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Last Login</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+          <tr>
+            <td>{{ customer.username }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.last_login|default:"Never" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-muted text-center">No Customers found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

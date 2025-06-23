@@ -1,0 +1,208 @@
+{% load static %}
+<style>
+  .nav-link {
+    color: blue;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background-color: blue;
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-link:hover {
+    color: darkblue;
+  }
+
+  .search-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  #userSearch {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  #results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    border-radius: 0 0 6px 6px;
+    max-height: 250px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  #results li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    gap: 10px;
+    transition: background 0.2s ease;
+  }
+
+  #results li:hover {
+    background-color: #f1f1f1;
+  }
+
+  #results img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  /* 🌙 Dark Mode Support */
+  body.dark-mode #userSearch,
+  body.dark-mode #results {
+    background-color: #2c2c2c;
+    color: #fff;
+    border-color: #444;
+  }
+
+  body.dark-mode #results li:hover {
+    background-color: #3a3a3a;
+  }
+
+</style>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm sticky-top">
+  <div class="container-fluid">
+      <!-- Toggle Button (top left) -->
+    <!-- Brand Logo + Name -->
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'home' %}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" >
+      <img src="{% static 'images/logo.jpg' %}" alt="Logo" style="height: 40px;" class="me-2 rounded" />
+      Mobile Repair Imphal
+    </a>
+
+    <!-- Toggler for Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible Content -->
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">🏠 Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_repair_request' %}">➕ Add Request</a>
+        </li>
+      </ul>
+<!--      <div class="search-dropdown">-->
+<!--          <input type="text" id="userSearch" placeholder="Search users..." autocomplete="off" />-->
+<!--          <ul id="results"></ul>-->
+<!--        </div>-->
+
+      <!-- Right Side (Auth Dropdown or Login/Register) -->
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <div class="dropdown">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://ui-avatars.com/api/?name={{ user.username }}" class="rounded-circle shadow-sm me-2" width="40" height="40" alt="User Avatar" />
+              <div class="ms-2 d-none d-sm-block text-start">
+                     <span class="fw-semibold">{{ user.username|title }}</span>
+                    <small class="text-dark">(
+                      {% if user.is_superuser %}Admin
+                      {% elif user.is_staff %}Staff
+                      {% else %}Customer
+                      {% endif %}
+                    )</small>
+                  </div>
+            </button>
+            <ul class="dropdown-menu dropdown-menu shadow" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'user_settings' %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
+              <li><a class="dropdown-item" href="{% url 'samsung_tools' %}"><i class="bi bi-clock-history me-2"></i>Order History</a></li>
+              {% if user.is_superuser %}
+              <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a></li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        {% else %}
+          <a href="{% url 'login_register' %}" class="btn btn-outline-primary">
+            <i class="bi bi-person-circle me-1"></i> Login / Register
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+      {% include "repair/breadcrumbs.html" %}
+
+
+<script>
+  const userSearch = document.getElementById("userSearch");
+  const resultsBox = document.getElementById("results");
+
+  userSearch.addEventListener("input", async function () {
+    const query = this.value.trim();
+    if (query.length === 0) {
+      resultsBox.innerHTML = "";
+      resultsBox.style.display = "none";
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/users/?search=${encodeURIComponent(query)}`);
+      const users = await response.json();
+
+      if (users.length === 0) {
+        resultsBox.innerHTML = "<li class='text-muted'>No users found</li>";
+      } else {
+        resultsBox.innerHTML = users.map(user =>
+          `<li onclick="selectUser('${user.username}', '${user.email}')">
+            <strong>${user.username}</strong> — ${user.email}
+          </li>`
+        ).join("");
+      }
+
+      resultsBox.style.display = "block";
+    } catch (err) {
+      resultsBox.innerHTML = "<li>Error loading results</li>";
+      resultsBox.style.display = "block";
+    }
+  });
+
+  // Optional: populate input or handle click
+  function selectUser(username, email) {
+    document.getElementById("userSearch").value = username;
+    document.getElementById("results").innerHTML = "";
+    document.getElementById("results").style.display = "none";
+    alert(`Selected: ${username} (${email})`);
+    // Optionally redirect or fill another field
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function (e) {
+    if (!document.querySelector(".search-dropdown").contains(e.target)) {
+      resultsBox.style.display = "none";
+    }
+  });
+</script>

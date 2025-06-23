@@ -1,0 +1,55 @@
+{% block content %}
+<style>
+  .fade-in {
+    animation: fadeInUp 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .btn {
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 576px) {
+    .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .btn + .btn {
+      margin-left: 0 !important;
+    }
+  }
+</style>
+
+<div class="container py-5 text-center fade-in">
+  <div class="card shadow-sm p-4">
+    <h3 class="text-danger mb-4">
+      ⚠️ Are you sure you want to delete user: <strong>{{ user_obj.username }}</strong>?
+    </h3>
+
+    <form method="post" class="d-flex flex-column flex-md-row justify-content-center gap-3">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger px-4">
+        <i class="bi bi-trash-fill me-1"></i> Yes, Delete
+      </button>
+      <a href="{% url 'manage_users' %}" class="btn btn-secondary px-4">
+        <i class="bi bi-x-circle me-1"></i> Cancel
+      </a>
+    </form>
+  </div>
+</div>
+{% endblock %}

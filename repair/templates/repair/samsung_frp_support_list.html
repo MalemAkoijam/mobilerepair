@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Samsung FRP IMEI Support List</title>
+
+  <!-- CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    #scrollTopBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 999;
+      display: none;
+      width: 45px;
+      height: 45px;
+      font-size: 1.25rem;
+      animation: slideInBottom 0.4s ease forwards;
+    }
+
+    @keyframes slideInBottom {
+      from {
+        transform: translate(-100px, 100px);
+        opacity: 0;
+      }
+      to {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+    }
+
+    .table thead th {
+      white-space: nowrap;
+    }
+
+    .badge {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 576px) {
+      #scrollTopBtn {
+        bottom: 20px;
+        left: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  {% include 'repair/header.html' %}
+
+  <!-- Page Container -->
+  <div class="d-flex flex-column min-vh-100">
+    <div class="container-fluid  py-2" data-aos="fade-up">
+      <div class="bg-white shadow rounded p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="mb-0">
+            <i class="bi bi-list-check me-2 text-primary"></i>Samsung FRP by IMEI Support List
+          </h3>
+        </div>
+
+        <!-- 🔍 Search Field -->
+        <div class="input-group mb-4 shadow-sm">
+          <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Search by model name or number...">
+        </div>
+
+        <!-- 📊 Table -->
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered align-middle rounded overflow-hidden" id="frpTable">
+            <thead class="table-primary">
+              <tr>
+                <th>#</th>
+                <th>Model Name</th>
+                <th>Model Number</th>
+                <th>Supported</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for model in samsung_models %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td class="search-name">{{ model.model_name }}</td>
+                  <td class="search-number">{{ model.model_number }}</td>
+                  <td>
+                    {% if model.is_supported %}
+                      <span class="badge bg-success px-3 py-2">Yes</span>
+                    {% else %}
+                      <span class="badge bg-danger px-3 py-2">No</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted">No Samsung models found.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔝 Scroll to Top Button (Left Side Fixed) -->
+    <button id="scrollTopBtn" class="btn btn-primary rounded-circle shadow" title="Go to top">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+  </div>
+
+  {% include 'repair/footer.html' %}
+
+  <!-- JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+
+    // Search filtering
+    document.addEventListener("DOMContentLoaded", function () {
+      const input = document.getElementById("searchInput");
+      input.addEventListener("keyup", function () {
+        const filter = input.value.toLowerCase();
+        const rows = document.querySelectorAll("#frpTable tbody tr");
+
+        rows.forEach(row => {
+          const name = row.querySelector(".search-name").textContent.toLowerCase();
+          const number = row.querySelector(".search-number").textContent.toLowerCase();
+          row.style.display = (name.includes(filter) || number.includes(filter)) ? "" : "none";
+        });
+      });
+
+      // Scroll-to-top button toggle
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      window.addEventListener("scroll", () => {
+        scrollBtn.style.display = window.scrollY > 150 ? "block" : "none";
+      });
+
+      scrollBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  </script>
+</body>
+</html>

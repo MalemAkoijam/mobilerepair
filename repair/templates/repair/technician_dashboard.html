@@ -1,0 +1,224 @@
+{% load static %}
+{% block content %}
+{% include 'repair/header.html' %}
+<div class="container mt-5">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4" id="accountTabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" type="button">👤 My Account</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="technician-tab" data-bs-toggle="tab" data-bs-target="#technician" type="button">🔧 Technician Management</button>
+    </li>
+    {% if user.is_superuser %}
+    <li class="nav-item">
+      <button class="nav-link" id="add-staff-tab" data-bs-toggle="tab" data-bs-target="#add-staff" type="button">➕ Add Staff</button>
+    </li>
+    {% endif %}
+    {% if user.is_staff or user.is_superuser %}
+    <li class="nav-item">
+      <button class="nav-link" id="add-customer-tab" data-bs-toggle="tab" data-bs-target="#add-customer" type="button">➕ Add Customer</button>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button">👥 Users</button>
+    </li>
+  </ul>
+
+  <!-- Tabs Content -->
+  <div class="tab-content" id="accountTabsContent">
+
+    <!-- My Account Tab -->
+    <div class="tab-pane fade show active" id="account">
+      <h3 class="mb-3">👤 Welcome, {{ user.username }}</h3>
+      <div class="card mb-4">
+        <div class="card-body">
+          <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+      </div>
+
+      <h5 class="mb-3">📂 Your Firmware Access</h5>
+      {% if accesses %}
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for access in accesses %}
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <img src="{{ access.firmware.image }}" class="card-img-top" alt="{{ access.firmware.name }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ access.firmware.name }}</h5>
+              <p class="card-text">
+                <strong>Android:</strong> {{ access.firmware.android_version }}<br>
+                <strong>Size:</strong> {{ access.firmware.size }}
+              </p>
+              <a href="{{ access.firmware.file_url }}" target="_blank" class="btn btn-primary">⬇ Download</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-muted">You don't have access to any firmwares yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Technician Management Tab -->
+    <div class="tab-pane fade" id="technician">
+      <h3 class="mb-3 text-primary">Technician Management</h3>
+
+      <form method="post" action="{% url 'add_technician' %}" class="mb-4">
+        {% csrf_token %}
+        <div class="row g-2 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label">Technician Name</label>
+            <input type="text" name="name" required class="form-control">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phone" required class="form-control">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select name="type" class="form-select" required>
+              <option value="">Choose...</option>
+              <option value="Software">Software</option>
+              <option value="Hardware">Hardware</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-success w-100">Add</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Available Technicians</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for tech in technicians %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><strong>{{ tech.name }}</strong> — 📞 {{ tech.phone }} ({{ tech.type }})</span>
+          </li>
+          {% empty %}
+          <li class="list-group-item text-muted">No technicians added yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Add Staff Tab -->
+    {% if user.is_superuser %}
+    <div class="tab-pane fade" id="add-staff">
+      <h3 class="mb-4 text-success">➕ Add New Staff</h3>
+      <form method="post" action="{% url 'add_staff' %}" class="card p-4 shadow-sm">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" name="username" required class="form-control">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" required class="form-control">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" required class="form-control">
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-success">Create Staff Account</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- Add Customer -->
+    {% if user.is_staff or user.is_superuser %}
+    <div class="tab-pane fade" id="tab-add-customer" role="tabpanel" aria-labelledby="tab-add-customer-tab">
+      <h3 class="mb-4 text-success">➕ Add New Customer</h3>
+      <form method="post" action="{% url 'add_customer_account' %}" class="card p-4 shadow-sm">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="customer_name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" name="customer_username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="customer_email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="customer_password" class="form-control" required>
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <!-- Users List Tab -->
+    <div class="tab-pane fade" id="users">
+      <h3 class="mb-4 text-primary">👥 Users List</h3>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white fw-bold">🔐 Admins</div>
+            <ul class="list-group list-group-flush">
+              {% for admin in admins %}
+              <li class="list-group-item">{{ admins.username }} — {{ admins.email }}</li>
+              {% empty %}
+              <li class="list-group-item text-muted">No Admins found.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-warning shadow-sm">
+            <div class="card-header bg-warning text-dark fw-bold">🛠️ Staff</div>
+            <ul class="list-group list-group-flush">
+              {% for staff in staffs %}
+              <li class="list-group-item">{{ staff.username }} — {{ staff.email }}</li>
+              {% empty %}
+              <li class="list-group-item text-muted">No Staff found.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+
+        <div class="col-md-4">
+          <div class="card border-info shadow-sm">
+            <div class="card-header bg-info text-white fw-bold">🙋 Customers</div>
+            <ul class="list-group list-group-flush">
+              {% for customer in customers %}
+              <li class="list-group-item">{{ customer.username }} — {{ customer.email }}</li>
+              {% empty %}
+              <li class="list-group-item text-muted">No Customers found.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+

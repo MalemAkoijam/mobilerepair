@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+{% include "repair/header.html" %}
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">👥 Customer List</h2>
+    <a href="{% url 'home' %}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left"></i> Back to Home
+    </a>
+  </div>
+
+  {% if customers %}
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Registered</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ customer.name }}</td>
+              <td>{{ customer.phone }}</td>
+              <td>{{ customer.email }}</td>
+              <td>{{ customer.created_at|date:"M d, Y" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-warning">No customers found.</div>
+  {% endif %}
+</div>
+
+{% include "repair/footer.html" %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

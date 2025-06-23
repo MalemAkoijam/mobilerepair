@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Firmware Info</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #f0f4f8, #dfe9f3);
+            font-family: 'Segoe UI', sans-serif;
+<!--            padding: 40px 15px;-->
+        }
+
+        .info-card {
+            max-width: 100%;
+            margin: auto;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            background-color: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-80px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .info-image {
+            flex: 1;
+            min-width: 320px;
+            background: linear-gradient(135deg, #0d6efd, #3b82f6);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-details {
+            flex: 2;
+            padding: 30px 30px;
+        }
+
+        .info-details h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #0d6efd;
+            width: 160px;
+            display: inline-block;
+        }
+
+        .info-data {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .badge-info {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            margin-right: 8px;
+        }
+
+        .btn-section {
+            margin-top: 30px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-secondary:hover {
+            background-color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .info-card {
+                flex-direction: column;
+            }
+
+            .info-details {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+   {% include "repair/header.html" %}
+    <div class="container flex-grow-1">
+
+<div class="info-card">
+    <!-- Image Section -->
+    <div class="info-image">
+        <img src="{{ firmware.image }}" alt="{{ firmware.name }}" class="img-thumbnail" width="250">
+
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-details d-flex flex-column justify-content-between">
+        <div>
+            <h3>📱 Firmware Details</h3>
+
+            <p><span class="info-label">Model Name:</span> <span class="info-data">{{ firmware.name }}</span></p>
+            <p><span class="info-label">Format:</span> <span class="info-data">{{ firmware.format_type }}</span></p>
+            <p><span class="info-label">Upload Date:</span> <span class="info-data">{{ firmware.date|date:"d-m-Y" }}</span></p>
+            <p><span class="info-label">Description:</span><br>
+                <span class="info-data">{{ firmware.description }}</span></p>
+
+            <div class="mt-3">
+                <span class="badge-info">📥 {{ firmware.format_type }}</span>
+                <span class="badge-info">📱 Android {{ firmware.android_version }}</span>
+                <span class="badge-info">📦 {{ firmware.size }}</span>
+            </div>
+        </div>
+        {% if firmware %}
+    <!-- Show firmware details -->
+        {% else %}
+            <div class="container mt-5 text-center">
+                <h2 class="text-danger">❌ Firmware Not Found</h2>
+                <p>{{ error_message }}</p>
+                <a href="{{ back_url }}" class="btn btn-primary mt-3">⬅ Back to Firmware List</a>
+            </div>
+        {% endif %}
+
+                <!-- Button Section -->
+        <div class="btn-section d-flex flex-column flex-md-row justify-content-between flex-wrap gap-2 mt-4 pt-3 border-top">
+            <!-- Back Button -->
+            <a href="{{ back_url }}" class="btn btn-secondary mb-3">
+              ⬅️ Back
+            </a>
+
+
+            <!-- Conditional Download or WhatsApp Payment -->
+            {% if has_access %}
+                <!-- Download Button -->
+                <a href="{{ firmware.file_url }}" class="btn btn-success" target="_blank">
+                    ⬇ Download Firmware
+                </a>
+            {% else %}
+                <!-- WhatsApp Payment Button -->
+                <a href="https://wa.me/919123456789?text=Hi%2C%20I%20want%20to%20buy%20{{ firmware.name }} firmware"
+                   target="_blank"
+                   class="btn btn-success">
+                    💬 Pay via WhatsApp
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Show Only to Staff/Admin -->
+        {% if user.is_staff %}
+            <div class="mt-3">
+                <button onclick="grantAccessAfterPayment({{ user.id }}, {{ firmware.id }})" class="btn btn-warning w-100 w-md-auto">
+                    ✅ Manually Grant Access
+                </button>
+            </div>
+        {% endif %}
+
+
+    </div>
+
+</div>
+</div>
+<!-- 🔝 Scroll to Top Button (Left Side Fixed) -->
+<button id="scrollTopBtn" class="btn btn-primary rounded-circle shadow" title="Go to top">
+  <i class="bi bi-arrow-up"></i>
+</button>
+{% include "repair/footer.html" %}
+<style>
+  #scrollTopBtn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px; /* 👈 Moved to left */
+    z-index: 999;
+    display: none;
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+    animation: slideInBottomLeft 0.4s ease forwards;
+  }
+
+  @keyframes slideInBottomLeft {
+    from {
+      transform: translate(-100px, 100px);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+  window.addEventListener("scroll", () => {
+    if (document.documentElement.scrollTop > 200) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
+
+
+<script>
+function grantAccessAfterPayment(userId, firmwareId) {
+    fetch('/grant-access/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: new URLSearchParams({
+            user_id: userId,
+            firmware_id: firmwareId
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('✅ Access granted!');
+            location.reload();  // Refresh to show the download button if it's conditionally rendered
+        } else {
+            alert('❌ Failed: ' + data.message);
+        }
+    });
+}
+</script>
+
+
+</body>
+</html>

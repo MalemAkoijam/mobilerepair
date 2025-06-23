@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMEI Order Dashboard</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.875rem;
+    }
+
+    .table thead th, .table tbody td {
+      vertical-align: middle;
+      padding: 0.4rem 0.5rem;
+    }
+
+    .form-control, .form-select {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.5rem;
+    }
+
+    textarea.form-control {
+      resize: vertical;
+    }
+
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .table th, .table td {
+      white-space: nowrap;
+    }
+
+    .table td textarea {
+      min-width: 150px;
+      max-width: 300px;
+      white-space: normal;
+    }
+
+    .table td.wrap-text {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    @media (max-width: 768px) {
+      .table-responsive {
+        font-size: 0.75rem;
+      }
+
+      .table th, .table td {
+        white-space: normal;
+      }
+
+      .table td textarea {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100 small">
+  <div class="container-fluid mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="mb-0 fw-semibold">📋 IMEI Order History</h6>
+      <a href="{% url 'imei_order_view' %}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-plus-circle me-1"></i> New Order
+      </a>
+    </div>
+
+    {% if orders_imei %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover table-sm align-middle shadow-sm small">
+        <thead class="table-light small">
+          <tr>
+            <th>Service</th>
+            <th>Serial(s)</th>
+            <th>Price</th>
+            <th>Frequent</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Remarks</th>
+            <th>Update</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order_imei in orders_imei %}
+          <tr>
+            <form method="POST" action="{% url 'update_imei_order' order_imei.id %}">
+              {% csrf_token %}
+              <td>{{ order_imei.service_name }}</td>
+              <td class="wrap-text">{{ order_imei.serial_numbers|linebreaksbr }}</td>
+              <td>₹{{ order_imei.service_price }}</td>
+              <td>{% if order_imei.frequent_use %}✅{% else %}❌{% endif %}</td>
+              <td>{{ order_imei.created_at|date:"d M Y H:i" }}</td>
+              <td>
+                {% if order_imei.status == 'done' %}
+                  <span class="badge bg-success">✅ Done</span>
+                {% elif order_imei.status == 'rejected' %}
+                  <span class="badge bg-danger">❌ Rejected</span>
+                {% elif order_imei.status == 'processing' %}
+                  <span class="badge bg-primary">🔄 Processing</span>
+                {% else %}
+                  <span class="badge bg-secondary">❓ Unknown</span>
+                {% endif %}
+              </td>
+              <td class="wrap-text">
+                <textarea name="remarks" class="form-control form-control-sm" rows="2" placeholder="Enter remarks...">{{ order_imei.remarks }}</textarea>
+              </td>
+              <td style="min-width: 140px;">
+                <select name="status" class="form-select form-select-sm mb-1">
+                  <option value="processing" {% if order_imei.status == 'processing' %}selected{% endif %}>🔄 Processing</option>
+                  <option value="done" {% if order_imei.status == 'done' %}selected{% endif %}>✅ Done</option>
+                  <option value="rejected" {% if order_imei.status == 'rejected' %}selected{% endif %}>❌ Rejected</option>
+                </select>
+                <button type="submit" class="btn btn-sm btn-outline-success w-100">
+                  <i class="bi bi-upload me-1"></i>Update
+                </button>
+              </td>
+            </form>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <div class="alert alert-info small">You have not placed any orders yet.</div>
+    {% endif %}
+  </div>
+
+
+</body>
+</html>

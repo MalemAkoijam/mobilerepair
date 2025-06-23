@@ -1,0 +1,51 @@
+{% include 'repair/header.html' %}
+{% block content %}
+
+<!-- Auto Refresh Script -->
+<script>
+  setTimeout(() => {
+    window.location.reload();
+  }, 5000);  // Refresh every 5 seconds
+</script>
+
+<div class="container mt-5">
+  <h3 class="fw-bold text-primary mb-4">✅ Approve Samsung FRP Request</h3>
+
+  <!-- Optional Search Filter (applies only to current request) -->
+  <form method="GET" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="🔍 Search order info..." value="{{ request.GET.q }}">
+      <button type="submit" class="btn btn-outline-primary">Search</button>
+    </div>
+  </form>
+
+  <div class="card shadow-lg border-0 rounded">
+    <div class="card-body">
+      <div class="mb-3">
+        <strong>🆔 Order ID:</strong> <code>{{ order.custom_id }}</code><br>
+        <strong>👤 User:</strong> {{ order.user.username }}<br>
+        <strong>📱 Model:</strong> {{ order.model }}<br>
+        <strong>🔢 IMEI:</strong> {{ order.imei }}
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="result" class="form-label">📝 Result / Info</label>
+          <textarea name="result" id="result" class="form-control" rows="4" required>{{ order.result }}</textarea>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">
+            ✅ Approve & Save
+          </button>
+          <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

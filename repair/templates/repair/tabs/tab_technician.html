@@ -1,0 +1,46 @@
+<!-- Technician Management -->
+<div class="tab-pane fade" id="tab-technician" role="tabpanel" aria-labelledby="tab-technician-tab">
+  <h3 class="mb-3 text-primary">Technician Management</h3>
+
+  <!-- Add Technician Form -->
+  <form method="post" action="{% url 'add_technician' %}" class="mb-4">
+    {% csrf_token %}
+    <div class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Technician Name</label>
+        <input type="text" name="technician_name" required class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Phone Number</label>
+        <input type="text" name="technician_phone" required class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Type</label>
+        <select name="type" class="form-select" required>
+          <option value="">Choose...</option>
+          <option value="Software">Software</option>
+          <option value="Hardware">Hardware</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-success w-100">Add</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Technician List -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Available Technicians</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for tech in technicians %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><strong>{{ tech.name }}</strong> — 📞 {{ tech.phone }} ({{ tech.type }})</span>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No technicians added yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

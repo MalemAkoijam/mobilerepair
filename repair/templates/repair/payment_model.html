@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pay & Activate | {{ tool.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f4f6f8;
+    }
+    .payment-card {
+      max-width: 900px;
+      margin: 60px auto;
+      border-radius: 20px;
+    }
+    .qr-code {
+      max-width: 100%;
+      max-height: 300px;
+      border: 5px solid #dee2e6;
+      border-radius: 10px;
+    }
+    .upi-code {
+      font-size: 1rem;
+      background-color: #f1f1f1;
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    @media (max-width: 768px) {
+      .qr-code {
+        max-width: 220px;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card shadow payment-card p-4">
+    <div class="card-body">
+
+      <h4 class="fw-bold text-center mb-4">
+        <i class="bi bi-stars text-warning me-1"></i>Pay & Submit: {{ tool.name }}
+      </h4>
+
+      <div class="row align-items-center">
+        <!-- Left: QR Code -->
+        <div class="col-md-5 text-center">
+          <p class="fw-bold">Scan to Pay via UPI</p>
+          <img src="{{ qr_code_base64 }}" alt="UPI QR Code" class="qr-code mb-2">
+          <p class="mt-2 mb-0">UPI ID</p>
+          <span class="upi-code">{{ upi_id }}</span>
+        </div>
+
+        <!-- Right: Plan Info and Instructions -->
+        <!-- Right: Plan Info and Instructions -->
+          <div class="col-md-7">
+            <form method="post" action="{% url 'submit_activation' %}">
+              {% csrf_token %}
+
+              <!-- Hidden Inputs -->
+              <input type="hidden" name="tool_id" value="{{ tool.id }}">
+              <input type="hidden" name="price" value="{{ price }}">
+              <input type="hidden" name="plan" value="{{ month }}">
+
+              <!-- User Input: Name -->
+              <div class="mb-3">
+                <label for="user_name" class="form-label">Your Name</label>
+                <input type="text" name="user_name" id="user_name" class="form-control" required>
+              </div>
+
+              <!-- User Input: Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" name="email" id="email" class="form-control" required>
+              </div>
+
+              <!-- Plan Info -->
+              <div class="alert alert-info">
+                <p class="mb-1"><strong>Plan:</strong> <span class="text-success">{{ month }} Months</span></p>
+                <p class="mb-0"><strong>Amount:</strong> ₹<span class="text-danger">{{ price }}</span></p>
+              </div>
+
+              <!-- WhatsApp Note -->
+              <div class="alert alert-warning">
+                <strong>📢 After Payment:</strong><br>
+                Send your <strong>payment screenshot</strong> with your name and tool name to:<br>
+                <a href="https://wa.me/918798652418" class="text-success fw-bold" target="_blank">
+                  <i class="bi bi-whatsapp"></i> +91 879652418
+                </a>
+              </div>
+
+              <!-- Submit and Back Buttons -->
+              <button type="submit" class="btn btn-primary w-100 mt-2">
+                ✅ Submit Payment Confirmation
+              </button>
+              <a href="{% url 'tools_activation' %}" class="btn btn-outline-secondary w-100 mt-2">
+                🔙 Back to Activation
+              </a>
+            </form>
+          </div>
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

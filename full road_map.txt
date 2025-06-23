@@ -1,0 +1,31 @@
+mobilerepair/                   ← Django project folder (your manage.py is here)
+├── manage.py
+├── mobilerepair/              ← Project settings folder
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── repair/                    ← Your app folder
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── migrations/
+│   │   └── ...
+│   ├── models.py
+│   ├── templates/
+│   │   └── repair/
+│   │       ├── home.html
+│   │       ├── edit_repair.html
+│   │       └── ... other templates
+│   ├── static/
+│   │   └── repair/
+│   │       └── styles.css
+│   ├── templatetags/          ← ✅ Custom template tags folder
+│   │   ├── __init__.py        ← ✅ Required (can be empty)
+│   │   └── pagination_tags.py ← ✅ Your custom pagination tag lives here
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py

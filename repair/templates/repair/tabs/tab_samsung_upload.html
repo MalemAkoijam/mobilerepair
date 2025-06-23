@@ -1,0 +1,30 @@
+<!-- Samsung Bulk Upload Tab -->
+{% load widget_tweaks %}
+<div class="tab-pane fade" id="tab-samsung-upload" role="tabpanel" aria-labelledby="tab-samsung-upload-tab">
+  <div class="card shadow-sm p-4 bg-light border-0">
+    <h4 class="mb-3 text-primary">📥 Bulk Upload Samsung Models</h4>
+
+    <form method="POST" action="{% url 'get_device_models' %}">
+      {% csrf_token %}
+      {% if bulk_form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ bulk_form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="mb-3">
+        <label for="bulkData" class="form-label fw-semibold">Paste Bulk Model Data</label>
+        {{ bulk_form.bulk_data|add_class:"form-control" }}
+        <div class="form-text">
+          Use tab-separated values: <code>Model Name[TAB]Model Number[TAB]Support (Yes/No)</code>
+        </div>
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-upload me-1"></i>Upload
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

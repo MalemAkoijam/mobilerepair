@@ -1,0 +1,86 @@
+{% load static %}
+{% include 'repair/header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ folder.name }} - Windows Tools</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: "Segoe UI", sans-serif;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <div class="d-flex flex-column min-vh-100">
+        <div class="container-fluid mt-4 mb-5 px-2">
+    <!-- Page Header -->
+      <div class="mb-4 text-center">
+          <h2 class="fw-bold">
+              <i class="bi bi-windows me-2"></i>{{ folder.name }} - Windows Tools & Files
+          </h2>
+          <p class="text-muted">Browse, preview, and download available tools and ISO images.</p>
+      </div>
+
+    <!-- File Table Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-hdd-stack me-2"></i>Available Files
+            </h5>
+            <span class="badge bg-light text-dark px-3 py-2">{{ File|length }} file{{ File|length|pluralize }}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col"><i class="bi bi-file-earmark-text me-1"></i> File Name</th>
+                            <th scope="col"><i class="bi bi-hdd me-1"></i> Size</th>
+                            <th scope="col"><i class="bi bi-calendar-date me-1"></i> Uploaded At</th>
+                            <th scope="col"><i class="bi bi-cloud-arrow-down me-1"></i> Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fw in firmwares %}
+                            <tr>
+                                <td>{{ fw.file_name }}</td>
+                                <td>{{ fw.file_size|default:"N/A" }}</td>
+                                <td>{{ fw.uploaded_at|date:"Y-m-d H:i" }}</td>
+                                <td>
+                                    <a href="{{ fw.cloud_url|default:'#' }}" target="_blank" class="btn btn-success btn-sm">
+                                        <i class="bi bi-download me-1"></i>Download
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-info-circle me-2"></i>No files available in this folder.
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+  {% include "repair/footer.html" %}
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
